@@ -186,7 +186,17 @@ export default function HomeScreen({ navigation }: any) {
       </View>
 
       <FlatList
-        data={notes.filter(n => n.title.toLowerCase().includes(searchText.toLowerCase()))}
+        data={notes.filter((n: NoteItem) => {
+          const s = searchText.toLowerCase();
+          return (
+            n.title.toLowerCase().includes(s) ||
+            (n.content && n.content.toLowerCase().includes(s)) ||
+            (n.items &&
+              n.items.some((item: ChecklistItem) =>
+                item.text.toLowerCase().includes(s)
+              ))
+          );
+        })}
         keyExtractor={item => item.id}
         renderItem={renderNoteCard}
         contentContainerStyle={styles.notesList}
@@ -207,7 +217,10 @@ export default function HomeScreen({ navigation }: any) {
               style={styles.menuItem}
               onPress={() => {
                 setIsMenuVisible(false);
-                Alert.alert('Info', 'Text note feature coming soon');
+                navigation.navigate('AddTextNote', {
+                  initialNote: null,
+                  onSave: handleSaveNote,
+                });
               }}
             >
               <MaterialCommunityIcons name="text" color="#e8e0ff" size={24} />

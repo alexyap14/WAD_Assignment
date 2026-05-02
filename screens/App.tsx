@@ -8,6 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import HomeScreen from './HomeScreen';
 import DeletedScreen from './DeletedScreen';
 import AddListNoteScreen from './AddListNoteScreen';
+import AddTextNoteScreen from './AddTextNoteScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -71,6 +72,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Main" component={DrawerGroup} />
         <Stack.Screen name="AddListNote" component={AddListNoteScreen} />
+        <Stack.Screen name="AddTextNote" component={AddTextNoteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
