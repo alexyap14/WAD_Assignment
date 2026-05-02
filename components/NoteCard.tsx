@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NoteItem, ChecklistItem } from '../screens/HomeScreen';
 
@@ -18,7 +18,13 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note, onPress, onLongPress, 
       {note.type === 'text' && (
         <Text style={styles.content} numberOfLines={6}>{note.content}</Text>
       )}
-
+      {note.type === 'image' && note.imageUri && (
+          <Image
+            source={{ uri: note.imageUri }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        )}
       {note.type === 'list' && note.items && (
         <View>
           {note.items.slice(0, 5).map(item => (
@@ -59,4 +65,10 @@ const styles = StyleSheet.create({
   checklistRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
   checklistText: { color: '#c8c8d8', fontSize: 13, flex: 1 },
   checked: { textDecorationLine: 'line-through', color: '#666' },
+  image: {
+  width: '100%',
+  height: 150,
+  borderRadius: 8,
+  marginTop: 8,
+},
 });
