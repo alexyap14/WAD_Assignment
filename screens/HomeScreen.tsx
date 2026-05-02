@@ -141,7 +141,16 @@ export default function HomeScreen({ navigation }: any) {
   const renderNoteCard = ({ item }: { item: NoteItem }) => (
     <NoteCard
       note={item}
-      onPress={() => navigation.navigate('AddListNote', { initialNote: item, onSave: handleSaveNote })}
+      onPress={() => {
+        if (item.type === 'text') {
+          navigation.navigate('AddTextNote', { initialNote: item, onSave: handleSaveNote });
+        } else if (item.type === 'list') {
+          navigation.navigate('AddListNote', { initialNote: item, onSave: handleSaveNote });
+        } else {
+          // fallback for image or unknown type
+          navigation.navigate('AddTextNote', { initialNote: item, onSave: handleSaveNote });
+        }
+      }}
       onLongPress={() => handleDeleteNote(item.id)}
       onToggleChecklistItem={toggleChecklistItem}
     />
