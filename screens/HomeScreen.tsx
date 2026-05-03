@@ -144,11 +144,13 @@ export default function HomeScreen({ navigation }: any) {
       onPress={() => {
         if (item.type === 'text') {
           navigation.navigate('AddTextNote', { initialNote: item, onSave: handleSaveNote });
+
         } else if (item.type === 'list') {
           navigation.navigate('AddListNote', { initialNote: item, onSave: handleSaveNote });
-        } else {
-          // fallback for image or unknown type
-          navigation.navigate('AddTextNote', { initialNote: item, onSave: handleSaveNote });
+
+        } else if (item.type === 'image') {
+          navigation.navigate('AddImageNote', { initialNote: item, onSave: handleSaveNote });
+
         }
       }}
       onLongPress={() => handleDeleteNote(item.id)}
@@ -191,7 +193,6 @@ export default function HomeScreen({ navigation }: any) {
         <TouchableOpacity onPress={syncFromCloud} style={styles.syncBtn}>
           <MaterialCommunityIcons name="cloud-sync" color="#c8c8d8" size={24} />
         </TouchableOpacity>
-        <View style={styles.avatar}><Text style={styles.avatarText}>A</Text></View>
       </View>
 
       <FlatList
@@ -251,7 +252,10 @@ export default function HomeScreen({ navigation }: any) {
               style={styles.menuItem}
               onPress={() => {
                 setIsMenuVisible(false);
-                Alert.alert('Info', 'Image note feature coming soon');
+                navigation.navigate('AddImageNote', {
+                  initialNote: null,
+                  onSave: handleSaveNote,
+                });
               }}
             >
               <MaterialCommunityIcons name="image" color="#e8e0ff" size={24} />

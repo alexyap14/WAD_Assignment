@@ -9,6 +9,7 @@ import HomeScreen from './HomeScreen';
 import DeletedScreen from './DeletedScreen';
 import AddListNoteScreen from './AddListNoteScreen';
 import AddTextNoteScreen from './AddTextNoteScreen';
+import AddImageNoteScreen from './AddImageNoteScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -73,6 +74,7 @@ export default function App() {
         <Stack.Screen name="Main" component={DrawerGroup} />
         <Stack.Screen name="AddListNote" component={AddListNoteScreen} />
         <Stack.Screen name="AddTextNote" component={AddTextNoteScreen} />
+        <Stack.Screen name="AddImageNote" component={AddImageNoteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
