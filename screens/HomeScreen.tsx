@@ -217,7 +217,15 @@ export default function HomeScreen({ navigation }: any) {
           if (cloudNotes.length > 0) setNotes(cloudNotes);
           setIsSyncing(false);
         }}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <MaterialCommunityIcons name="lightbulb-outline" color="#3d3d4d" size={120} />
+            <Text style={styles.emptyText}>Notes you add appear here</Text>
+          </View>
+        }
       />
+
+
 
       {/* FAB uses navigation.navigate to reach the AddListNote screen */}
       <View style={styles.fabContainer}>
@@ -302,6 +310,12 @@ const styles = StyleSheet.create({
   },
   avatarText: { color: '#fff' },
   emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 200,
+  },
   emptyText: { color: '#9898a8', marginTop: 10 },
 
   notesList: { padding: 16 },
