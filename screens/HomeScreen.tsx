@@ -193,7 +193,6 @@ export default function HomeScreen({ navigation }: any) {
         <TouchableOpacity onPress={syncFromCloud} style={styles.syncBtn}>
           <MaterialCommunityIcons name="cloud-sync" color="#c8c8d8" size={24} />
         </TouchableOpacity>
-        <View style={styles.avatar}><Text style={styles.avatarText}>A</Text></View>
       </View>
 
       <FlatList

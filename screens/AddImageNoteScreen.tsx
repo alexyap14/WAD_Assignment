@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Alert
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -28,6 +29,11 @@ export default function AddImageNoteScreen({ route, navigation }: any) {
 
   // 💾 Save
   const handleSave = () => {
+     if (!title?.trim() && !content?.trim() && !imageUri) {
+    Alert.alert('Cannot save', 'Please add a title, some text, or an image.');
+    return;
+      }
+
     const note: NoteItem = {
       id: initialNote?.id || Date.now().toString(),
       type: 'image', 
