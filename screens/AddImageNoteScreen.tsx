@@ -10,6 +10,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { NoteItem } from './HomeScreen';
+import { uploadImageToCloud } from '../server/cloudinaryUpload';
 
 export default function AddImageNoteScreen({ route, navigation }: any) {
   const { initialNote, onSave } = route.params || {};
@@ -28,18 +29,29 @@ export default function AddImageNoteScreen({ route, navigation }: any) {
   };
 
   // 💾 Save
-  const handleSave = () => {
-     if (!title?.trim() && !content?.trim() && !imageUri) {
-    Alert.alert('Cannot save', 'Please add a title, some text, or an image.');
-    return;
-      }
+  const handleSave = async () => {
+    if (!title?.trim() && !content?.trim() && !imageUri) {
+      Alert.alert('Cannot save', 'Please add a title, some text, or an image.');
+      return;
+    }
 
+    let finalImageUri = imageUri;
+
+    // If it's a local file, upload it to Cloudinary first
+    if (imageUri && imageUri.startsWith('file://')) {
+      try {
+        finalImageUri = await uploadImageToCloud(imageUri);
+      } catch (err) {
+        Alert.alert('Upload failed', 'Could not upload image.');
+        return;
+      }
+    }
     const note: NoteItem = {
       id: initialNote?.id || Date.now().toString(),
-      type: 'image', 
+      type: 'image',
       title: title.trim(),
       content: content.trim(),
-      imageUri,
+      imageUri: finalImageUri,
       createdAt:
         initialNote?.createdAt || new Date().toISOString(),
     };
@@ -48,59 +60,59 @@ export default function AddImageNoteScreen({ route, navigation }: any) {
     navigation.goBack();
   };
 
-return (
-  <View style={{ flex: 1 }}>
-    
-    {/* Header */}
-    <View style={styles.header}>
-    <TouchableOpacity onPress={() => navigation.goBack()}>
-        <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
-    </TouchableOpacity>
+  return (
+    <View style={{ flex: 1 }}>
 
-    <TouchableOpacity onPress={handleSave}>
-        <MaterialCommunityIcons name="check" size={28} color="#fff" />
-    </TouchableOpacity>
-    </View>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons name="arrow-left" size={28} color="#fff" />
+        </TouchableOpacity>
 
-    {/* Main content */}
-    <View style={styles.container}>
-      
-      {/* Choose picture */}
-      <TouchableOpacity onPress={pickImage} style={styles.iconBtn}>
-        <MaterialCommunityIcons name="image-plus" size={30} color="#fff" />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={handleSave}>
+          <MaterialCommunityIcons name="check" size={28} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
-      {/* Title */}
-      <TextInput
-        style={styles.titleInput}
-        placeholder="Title"
-        placeholderTextColor="#888"
-        value={title}
-        onChangeText={setTitle}
-      />
+      {/* Main content */}
+      <View style={styles.container}>
 
-      {/* Image */}
-      {imageUri && (
-        <Image
-          source={{ uri: imageUri }}
-          style={styles.image}
-          resizeMode="contain"
+        {/* Choose picture */}
+        <TouchableOpacity onPress={pickImage} style={styles.iconBtn}>
+          <MaterialCommunityIcons name="image-plus" size={30} color="#fff" />
+        </TouchableOpacity>
+
+        {/* Title */}
+        <TextInput
+          style={styles.titleInput}
+          placeholder="Title"
+          placeholderTextColor="#888"
+          value={title}
+          onChangeText={setTitle}
         />
-      )}
 
-      {/* Content */}
-      <TextInput
-        style={styles.contentInput}
-        placeholder="Write your note here..."
-        placeholderTextColor="#888"
-        value={content}
-        onChangeText={setContent}
-        multiline
-        textAlignVertical="top"
-      />
+        {/* Image */}
+        {imageUri && (
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        )}
+
+        {/* Content */}
+        <TextInput
+          style={styles.contentInput}
+          placeholder="Write your note here..."
+          placeholderTextColor="#888"
+          value={content}
+          onChangeText={setContent}
+          multiline
+          textAlignVertical="top"
+        />
+      </View>
     </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({
